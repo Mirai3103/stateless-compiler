@@ -1,0 +1,52 @@
+[
+  {
+    "id": "e72e9906-4c8e-4834-b057-543336705740",
+    "input": "27",
+    "expectOutput": "196418"
+  },
+  {
+    "id": "d04fb23d-dd3f-432f-b92d-650692d40f87",
+    "input": "12",
+    "expectOutput": "144"
+  },
+  {
+    "id": "2e5c9eff-8436-4f06-a864-4e9de93e4530",
+    "input": "56",
+    "expectOutput": "225851433717"
+  },
+  {
+    "id": "0f65266c-9a5c-4087-b3df-c694a53fbaea",
+    "input": "72",
+    "expectOutput": "498454011879264"
+  },
+  {
+    "id": "d04bf489-fc9c-4333-9282-321de65e742e",
+    "input": "21",
+    "expectOutput": "10946"
+  },
+  {
+    "id": "87e49c25-21f9-41f0-81ca-fed03304d0f9",
+    "input": "9",
+    "expectOutput": "34"
+  },
+  {
+    "id": "c2b6b786-af7c-4309-9cfc-89f0421408db",
+    "input": "25",
+    "expectOutput": "75025"
+  },
+  {
+    "id": "e5d0778b-4f71-4b14-9e9c-65cd1beabd13",
+    "input": "72",
+    "expectOutput": "498454011879264"
+  },
+  {
+    "id": "8cf266bc-1e43-4b4b-b3dd-5a69cba6b436",
+    "input": "90",
+    "expectOutput": "2880067194370816000"
+  },
+  {
+    "id": "a03189cc-5042-4d1d-8235-5adb50ea401f",
+    "input": "33",
+    "expectOutput": "3524578"
+  }
+]
