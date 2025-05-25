@@ -25,9 +25,9 @@ type Submission struct {
 }
 
 type SubmissionSettings struct {
-	WithTrim          bool `json:"with_trim"`
-	WithCaseSensitive bool `json:"with_case_sensitive"`
-	WithWhitespace    bool `json:"with_whitespace"`
+	WithTrim          bool `json:"withTrim"`
+	WithCaseSensitive bool `json:"withCaseSensitive"`
+	WithWhitespace    bool `json:"withWhitespace"`
 }
 
 type Language struct {
@@ -45,11 +45,11 @@ type TestCase struct {
 }
 
 type SubmissionResult struct {
-	SubmissionID   string         `json:"submission_id"`
-	TestCaseID     string         `json:"test_case_id"`
+	SubmissionID   string         `json:"submissionId"`
+	TestCaseID     string         `json:"testCaseId"`
 	Status         TestcaseStatus `json:"status"`
-	TimeUsedInMs   int            `json:"time_used_in_ms"`
-	MemoryUsedInKb int            `json:"memory_used_in_kb"`
+	TimeUsedInMs   int            `json:"timeUsedInMs"`
+	MemoryUsedInKb int            `json:"memoryUsedInKb"`
 	Output         string         `json:"output"`
 	Error          string         `json:"error"`
 }

@@ -1,10 +1,10 @@
 nats:
   url: "nats://localhost:4222" # Sẽ bị override bởi RUNNER_NATS_URL
-  submissionCreatedSubject: "submission.jobs"
-  submissionResultSubject: "submission.results"
+  submissionCreatedSubject: "submission.created"
+  submissionResultSubject: "submission.result"
   queueGroup: "coderunner_prod_group"
 
 runner:
-  sandboxBaseDir: "C:/Users/BaoBao/Downloads/tem" # Sẽ bị override bởi RUNNER_RUNNER_SANDBOXBASEDIR
+  sandboxBaseDir: "./temp" # Sẽ bị override bởi RUNNER_RUNNER_SANDBOXBASEDIR
   compilationTimeoutSec: 45
   maxConcurrentJobs: 20
