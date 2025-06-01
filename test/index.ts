@@ -1,20 +1,19 @@
 import {
-  connect,
-  StringCodec,
-  JSONCodec,
+  connect, JSONCodec,
   type NatsConnection,
-  type Codec,
+  type Codec
 } from "nats";
 import { v4 as uuidv4 } from "uuid"; // For generating unique IDs
 import { Database } from "bun:sqlite";
+import fs from "fs";
 
 interface TestCaseResult {
   //recieived from worker SUBJECT: submission.result
-  submission_id: string;
-  test_case_id: string;
+  submissionId: string;
+  testCaseId: string;
   status: string;
-  time_used_in_ms: number;
-  memory_used_in_kb: number;
+  timeUsedInMs: number;
+  memoryUsedInKb: number;
   output: string;
   error: string;
 }
@@ -61,7 +60,6 @@ const testcases = JSON.parse(
   await Bun.file("./testCases.json").text()
 ) as unknown as TestCase[];
 const codeDir = "./code_test";
-import fs from "fs";
 const goLanguage: Language = {
   id: "go",
   sourceFile: "main.go",
@@ -191,16 +189,16 @@ async function runSubscriber() {
     try {
       const result = jsonCodec.decode(msg.data);
       update.run(
-        `${result.time_used_in_ms}`,
-        `${result.memory_used_in_kb}`,
+        `${result.timeUsedInMs}`,
+        `${result.memoryUsedInKb}`,
         result.output,
         result.error,
         result.status,
-        result.submission_id,
-        result.test_case_id
+        result.submissionId,
+        result.testCaseId
       );
       console.log(
-        `✔️  Updated result for submission ${result.submission_id}, test ${result.test_case_id}`
+        `✔️  Updated result for submission ${result.submissionId}, test ${result.testCaseId}`
       );
     } catch (err) {
       console.error("❌ Error processing result message:", err);

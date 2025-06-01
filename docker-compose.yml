@@ -1,0 +1,69 @@
+
+services:
+  nats:
+    image: nats:2.11.4-alpine3.21
+    container_name: nats-server
+    ports:
+      - "4222:4222" # NATS client connections
+      - "8222:8222" # HTTP monitoring
+      - "6222:6222" # Routing for clustering
+    command: ["-js", "-m", "8222"] # Enable JetStream and monitoring
+    volumes:
+      - nats_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8222/healthz",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  remote-compiler:
+    build: .
+    container_name: remote-compiler
+    depends_on:
+      nats:
+        condition: service_healthy
+    environment:
+      - RUNNER_NATS_URL=nats://nats:4222
+      - RUNNER_RUNNER_SANDBOXBASEDIR=/tmp/runner_sandbox
+      - RUNNER_RUNNER_SANDBOXTYPE=direct
+      - RUNNER_RUNNER_MAXCONCURRENTJOBS=20
+      - RUNNER_RUNNER_COMPILATIONTIMEOUTSEC=45
+    volumes:
+      - compiler_temp:/tmp/runner_sandbox
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "runner"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Optional: NATS monitoring dashboard
+  nats-surveyor:
+    image: natsio/nats-surveyor:latest
+    container_name: nats-surveyor
+    depends_on:
+      - nats
+    ports:
+      - "7777:7777"
+    environment:
+      - NATS_SURVEYOR_SERVER_URL=http://nats:8222
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+volumes:
+  nats_data:
+  compiler_temp:
+
+networks:
+  default:
+    driver: bridge
