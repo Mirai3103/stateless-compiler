@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	SubmissionResultSubject = "submission.result"
+	SubmissionResultSubject = "submission.executed"
 )
 
 type Publisher struct {

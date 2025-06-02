@@ -168,7 +168,7 @@ runPublisher().catch((err) => {
   console.error("Unhandled error in publisher:", err);
   process.exit(1);
 });
-const RESULT_SUBJECT = "submission.result";
+const RESULT_SUBJECT = "submission.executed";
 
 const update = db.prepare(`
   UPDATE testcases
