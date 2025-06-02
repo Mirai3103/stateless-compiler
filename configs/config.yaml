@@ -1,7 +1,7 @@
 nats:
   url: "nats://localhost:4222" # Sẽ bị override bởi RUNNER_NATS_URL
   submissionCreatedSubject: "submission.created"
-  submissionResultSubject: "submission.result"
+  submissionResultSubject: "submission.executed"
   queueGroup: "coderunner_prod_group"
 
 runner:

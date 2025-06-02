@@ -79,7 +79,7 @@ func LoadConfig(configPaths ...string) (*Config, error) {
 	// Ví dụ:
 	v.SetDefault("nats.url", "nats://localhost:4222")
 	v.SetDefault("nats.submissionCreatedSubject", "submission.created")
-	v.SetDefault("nats.submissionResultSubject", "submission.result")
+	v.SetDefault("nats.submissionResultSubject", "submission.executed")
 	// v.SetDefault("nats.maxReconnects", 5)
 	v.SetDefault("nats.queueGroup", "runner-service-group")
 	v.SetDefault("runner.sandboxBaseDir", "/tmp/runner_sandbox")
