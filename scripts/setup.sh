@@ -82,21 +82,8 @@ set -e
 echo "[CHROOT] Updating apk and installing base packages..."
 apk update
 apk add --no-cache python3 go unzip curl bash openjdk17-jdk sudo git # Added git as it's often useful
-
-echo "[CHROOT] Installing Bun..."
-apk add --no-cache --virtual .bun-build-deps curl unzip # Temporary build dependencies for Bun
-# Run Bun installer as non-root if possible, or handle /root/.bun path carefully
-# For simplicity, assuming this script is run as root inside chroot via 'sudo chroot'
-curl -fsSL https://bun.sh/install | bash # This will install to /root/.bun
-BUN_INSTALL_DIR="/root/.bun"
-if [ -d "\$BUN_INSTALL_DIR/bin" ] && [ -f "\$BUN_INSTALL_DIR/bin/bun" ]; then
-    ln -sf "\$BUN_INSTALL_DIR/bin/bun" /usr/local/bin/bun
-    echo "[CHROOT] Bun symlinked to /usr/local/bin/bun"
-else
-    echo "[CHROOT] Warning: Bun executable not found at \$BUN_INSTALL_DIR/bin/bun after installation."
-fi
-apk del .bun-build-deps # Clean up temporary dependencies
-
+echo "[CHROOT] Installing Node.js ..."
+apk add --no-cache nodejs npm # Node.js and npm
 echo "[CHROOT] Installing Rust..."
 apk add --no-cache --virtual .rust-build-deps curl bash # Temporary build dependencies for Rust
 # rustup installs to \$CARGO_HOME (default /root/.cargo) if run as root
@@ -120,12 +107,7 @@ echo "[CHROOT] Go version:"
 go version
 echo "[CHROOT] Bash version:"
 bash --version
-if command -v bun >/dev/null 2>&1; then
-    echo "[CHROOT] Bun version:"
-    bun --version
-else
-    echo "[CHROOT] Bun command not found in PATH for verification."
-fi
+
 if command -v rustc >/dev/null 2>&1; then
     echo "[CHROOT] Rustc version:"
     rustc --version

@@ -8,6 +8,7 @@ require (
 	github.com/nats-io/nats.go v1.42.0
 	github.com/shirou/gopsutil/v3 v3.24.5
 	github.com/spf13/viper v1.20.1
+	google.golang.org/protobuf v1.36.6
 )
 
 require (
