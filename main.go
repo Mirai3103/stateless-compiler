@@ -11,15 +11,60 @@ import (
 )
 
 func main() {
-	cfg := &nsjailpb.NsJailConfig{
-		Name:      proto.String("demo"),
-		Hostname:  proto.String("sandbox"),
-		Mode:      nsjailpb.Mode_ONCE.Enum(),
-		TimeLimit: proto.Uint32(60),
-		MountProc: proto.Bool(true),
-		ExecBin: &nsjailpb.Exe{
-			Path: proto.String("/bin/echo"),
-			Arg:  []string{"hello from jail"},
+	golangFibonacci := `
+		package main
+		import "fmt"
+		func fib(n int) int {
+			if n <= 0 {
+				return 0
+			} else if n == 1 {
+				return 1
+			} else {
+				return fib(n-1) + fib(n-2)
+			}
+		}
+		func main() {
+			for i := 0; i < 10; i++ {
+				fmt.Println(fib(i))
+			}
+		}
+	`
+	sourceFile := "./tmp/fib.go"
+	if err := os.WriteFile(sourceFile, []byte(golangFibonacci), 0644); err != nil {
+		panic(err)
+	}
+	sanboxDir := "/sandbox/box1"
+	if err := os.MkdirAll(sanboxDir, 0755); err != nil {
+		panic(err)
+	}
+
+	cfg := nsjailpb.DefaultConfig()
+	mounts := cfg.GetMount()
+	schootmounts := &nsjailpb.MountPt{
+		Src:    proto.String(sanboxDir),
+		Dst:    proto.String("/"),
+		IsBind: proto.Bool(true),
+		Rw:     proto.Bool(true),
+	}
+	sourceMount := &nsjailpb.MountPt{
+		Src:    proto.String("./tmp/"),
+		Dst:    proto.String("/app/"),
+		IsBind: proto.Bool(true),
+		Rw:     proto.Bool(true),
+	}
+	mounts = append(mounts, sourceMount)
+	//  append first to mounts
+	mounts = append([]*nsjailpb.MountPt{schootmounts}, mounts...)
+	cfg.Mount = mounts
+	cfg.StatsFile = proto.String("stats.txt")
+	cfg.Cwd = proto.String("/app")
+
+	cfg.ExecBin = &nsjailpb.Exe{
+		Path: proto.String("/bin/bash"),
+		Arg0: proto.String("/bin/bash"),
+		Arg: []string{
+			"-c",
+			"go run /app/fib.go",
 		},
 	}
 

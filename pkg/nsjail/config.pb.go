@@ -583,7 +583,7 @@ type NsJailConfig struct {
 	// For mode=LISTEN, maximum number of connections from a single IP
 	MaxConnsPerIp *uint32 `protobuf:"varint,10,opt,name=max_conns_per_ip,json=maxConnsPerIp,def=0" json:"max_conns_per_ip,omitempty"`
 	// Wall-time time limit for commands
-	TimeLimit *uint32 `protobuf:"varint,11,opt,name=time_limit,json=timeLimit,def=600" json:"time_limit,omitempty"`
+	TimeLimit *uint32 `protobuf:"varint,11,opt,name=time_limit,json=timeLimit,def=0" json:"time_limit,omitempty"`
 	// Should nsjail go into background?
 	Daemon *bool `protobuf:"varint,12,opt,name=daemon,def=0" json:"daemon,omitempty"`
 	// Maximum number of CPUs to use: 0 - no limit
@@ -738,7 +738,8 @@ type NsJailConfig struct {
 	MacvlanVsMo  *string `protobuf:"bytes,94,opt,name=macvlan_vs_mo,json=macvlanVsMo,def=private" json:"macvlan_vs_mo,omitempty"`
 	// Binary path (with arguments) to be executed. If not specified here, it
 	// can be specified with cmd-line as "-- /path/to/command arg1 arg2"
-	ExecBin       *Exe `protobuf:"bytes,95,opt,name=exec_bin,json=execBin" json:"exec_bin,omitempty"`
+	ExecBin       *Exe    `protobuf:"bytes,95,opt,name=exec_bin,json=execBin" json:"exec_bin,omitempty"`
+	StatsFile     *string `protobuf:"bytes,96,opt,name=stats_file,json=statsFile,def=/var/log/nsjail.stats" json:"stats_file,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -754,7 +755,7 @@ const (
 	Default_NsJailConfig_Bindhost                = string("::")
 	Default_NsJailConfig_MaxConns                = uint32(0)
 	Default_NsJailConfig_MaxConnsPerIp           = uint32(0)
-	Default_NsJailConfig_TimeLimit               = uint32(600)
+	Default_NsJailConfig_TimeLimit               = uint32(0)
 	Default_NsJailConfig_Daemon                  = bool(false)
 	Default_NsJailConfig_MaxCpus                 = uint32(0)
 	Default_NsJailConfig_NiceLevel               = int32(19)
@@ -825,6 +826,7 @@ const (
 	Default_NsJailConfig_MacvlanVsGw             = string("192.168.0.1")
 	Default_NsJailConfig_MacvlanVsMa             = string("")
 	Default_NsJailConfig_MacvlanVsMo             = string("private")
+	Default_NsJailConfig_StatsFile               = string("/var/log/nsjail.stats")
 )
 
 func (x *NsJailConfig) Reset() {
@@ -1522,6 +1524,13 @@ func (x *NsJailConfig) GetExecBin() *Exe {
 	return nil
 }
 
+func (x *NsJailConfig) GetStatsFile() string {
+	if x != nil && x.StatsFile != nil {
+		return *x.StatsFile
+	}
+	return Default_NsJailConfig_StatsFile
+}
+
 var File_config_proto protoreflect.FileDescriptor
 
 const file_config_proto_rawDesc = "" +
@@ -1556,7 +1565,7 @@ const file_config_proto_rawDesc = "" +
 	"\x04path\x18\x01 \x02(\tR\x04path\x12\x10\n" +
 	"\x03arg\x18\x02 \x03(\tR\x03arg\x12\x12\n" +
 	"\x04arg0\x18\x03 \x01(\tR\x04arg0\x12\x1e\n" +
-	"\aexec_fd\x18\x04 \x01(\b:\x05falseR\x06execFd\"\xcf!\n" +
+	"\aexec_fd\x18\x04 \x01(\b:\x05falseR\x06execFd\"\x83\"\n" +
 	"\fNsJailConfig\x12\x14\n" +
 	"\x04name\x18\x01 \x01(\t:\x00R\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x03(\tR\vdescription\x12&\n" +
@@ -1568,9 +1577,9 @@ const file_config_proto_rawDesc = "" +
 	"\bbindhost\x18\b \x01(\t:\x02::R\bbindhost\x12\x1e\n" +
 	"\tmax_conns\x18\t \x01(\r:\x010R\bmaxConns\x12*\n" +
 	"\x10max_conns_per_ip\x18\n" +
-	" \x01(\r:\x010R\rmaxConnsPerIp\x12\"\n" +
+	" \x01(\r:\x010R\rmaxConnsPerIp\x12 \n" +
 	"\n" +
-	"time_limit\x18\v \x01(\r:\x03600R\ttimeLimit\x12\x1d\n" +
+	"time_limit\x18\v \x01(\r:\x010R\ttimeLimit\x12\x1d\n" +
 	"\x06daemon\x18\f \x01(\b:\x05falseR\x06daemon\x12\x1c\n" +
 	"\bmax_cpus\x18\r \x01(\r:\x010R\amaxCpus\x12!\n" +
 	"\n" +
@@ -1663,7 +1672,9 @@ const file_config_proto_rawDesc = "" +
 	"\rmacvlan_vs_gw\x18\\ \x01(\t:\v192.168.0.1R\vmacvlanVsGw\x12$\n" +
 	"\rmacvlan_vs_ma\x18] \x01(\t:\x00R\vmacvlanVsMa\x12+\n" +
 	"\rmacvlan_vs_mo\x18^ \x01(\t:\aprivateR\vmacvlanVsMo\x12&\n" +
-	"\bexec_bin\x18_ \x01(\v2\v.nsjail.ExeR\aexecBin*3\n" +
+	"\bexec_bin\x18_ \x01(\v2\v.nsjail.ExeR\aexecBin\x124\n" +
+	"\n" +
+	"stats_file\x18` \x01(\t:\x15/var/log/nsjail.statsR\tstatsFile*3\n" +
 	"\x04Mode\x12\n" +
 	"\n" +
 	"\x06LISTEN\x10\x00\x12\b\n" +
