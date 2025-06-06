@@ -9,10 +9,10 @@ if [ -d "nsjail" ]; then
     echo "nsjail directory already exists. Skipping clone."
 else
     git clone https://github.com/Mirai3103/nsjail.git
-    git checkout origin/export-stats
+  
 fi
 cd nsjail
-
+  git checkout export-stats
 echo "Installing nsjail build and runtime dependencies..."
 sudo apt-get -y update
 sudo apt-get install -y \
